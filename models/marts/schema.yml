@@ -1,0 +1,52 @@
+version: 2
+
+models:
+  - name: fct_orders
+    description: "Core orders fact table — grain: one row per order"
+    columns:
+      - name: order_id
+        description: "Order identifier"
+        # MISSING TESTS: no unique test — but grain is violated by bad join anyway
+      - name: customer_id
+      - name: order_date
+      - name: status
+      - name: order_amount_usd
+      - name: payment_method
+      - name: payment_amount_usd
+
+  - name: fct_revenue
+    description: "Daily revenue aggregation — grain: one row per day per payment_method"
+    columns:
+      - name: order_date
+        description: "Date of the order"
+      - name: payment_method
+      - name: gross_revenue_usd
+        description: "Sum of all payments"
+      - name: net_revenue_usd
+        # DUPLICATE METRIC: also defined in int_order_items with different formula
+        description: "Net revenue (gross * 0.97). WARNING: conflicts with outstanding_balance calc in int_order_items"
+      - name: order_count
+      - name: customer_count
+
+  - name: dim_customers
+    description: "Customer dimension — grain: one row per customer"
+    columns:
+      - name: customer_id
+        description: "Primary key"
+        tests:
+          - unique
+          - not_null
+      - name: email
+        tests:
+          - unique
+          - not_null
+      - name: customer_segment
+        description: "Segment based on order count: never_ordered / one_time / repeat"
+
+  - name: dim_customers_v2
+    # DEAD MODEL: no description, no downstream references, no tests
+    # Duplicate of dim_customers with conflicting segment logic
+    columns:
+      - name: customer_id
+      - name: customer_segment
+        description: "Segment based on lifetime value — CONFLICTS with dim_customers segment"

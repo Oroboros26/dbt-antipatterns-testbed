@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: stg_orders
+    description: "Staged orders with renamed columns"
+    columns:
+      - name: order_id
+        description: "Primary key"
+        # MISSING TESTS: no unique or not_null test on primary key
+      - name: customer_id
+      - name: order_date
+      - name: status
+      - name: order_amount_usd
+
+  - name: stg_customers
+    # DOCS QUALITY: no description on this model
+    columns:
+      - name: customer_id
+        # MISSING TESTS: no unique or not_null
+      - name: first_name
+      - name: last_name
+      - name: email
+
+  - name: stg_payments
+    description: "Staged payment records"
+    columns:
+      - name: payment_id
+        # MISSING TESTS: no unique or not_null on PK
+      - name: order_id
+      - name: payment_method
+      - name: payment_amount_usd
+
+  - name: stg_products
+    # DOCS QUALITY: dead model — no description, no tests, no downstream use
+    columns:
+      - name: product_id
+
+  - name: stg_inventory
+    # DOCS QUALITY: deprecated model with no documentation
+    columns:
+      - name: inventory_id

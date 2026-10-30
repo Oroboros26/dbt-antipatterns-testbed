@@ -1,0 +1,19 @@
+version: 2
+
+models:
+  - name: int_order_items
+    description: "Orders enriched with customer and payment data"
+    columns:
+      - name: order_id
+        description: "Order identifier"
+        # MISSING TESTS: no unique test — grain is assumed but not enforced
+      - name: customer_id
+      - name: order_date
+      - name: status
+      - name: order_amount_usd
+      - name: outstanding_balance_usd
+        # LOGIC DRIFT WARNING: same metric defined differently in fct_revenue
+        description: "Outstanding balance. NOTE: conflicts with net_revenue_usd in fct_revenue"
+      - name: first_name
+      - name: last_name
+      - name: email
